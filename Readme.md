@@ -6,7 +6,7 @@ This library provides a Vue 3 component for [DataTables.net](https://datatables.
 To install:
 
 ```
-npm install --save datatables.net-vue
+npm install --save datatables.net-vue3
 ```
 
 This will automatically install DataTables as a dependency. Other DataTables extensions can also be installed in your application - see below.
@@ -14,7 +14,7 @@ This will automatically install DataTables as a dependency. Other DataTables ext
 In your Vue component you can then:
 
 ```js
-import DataTable from 'datatables.net-vue'
+import DataTable from 'datatables.net-vue3'
 ```
 
 Which makes a `DataTable` component available. It provides the following parameters:

@@ -49,7 +49,7 @@ The `DataTable` component provides a single slot that can be used to define the 
 DataTables provides [a wide range of extensions](https://datatables.net/extensions/index) that singificantly expands its abilities. Extensions can be imported from npm and then registered with DataTables through it's `use()` method - e.g.:
 
 ```js
-import DataTable from 'datatables.net-vue'
+import DataTable from 'datatables.net-vue3'
 import Select from 'datatables.net-select';
 
 DataTable.use(Select);

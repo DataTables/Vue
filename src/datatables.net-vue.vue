@@ -2,17 +2,12 @@
 
 import { defineComponent } from 'vue';
 
-// Load in DataTables based and jQuery
-import jQuery from 'jquery';
-import * as DataTables from 'datatables.net';
+var DataTablesLib: any;
 
 export interface IData {
   _dt: null | any,
   oldData: Array<any>
 }
-
-// Register DataTables
-(DataTables.default as any)(window, jQuery);
 
 const Comp = defineComponent({
   name: 'DataTable',
@@ -54,7 +49,11 @@ const Comp = defineComponent({
       options.ajax = this.ajax;
     }
 
-    this._dt = jQuery(table).DataTable(options);
+    if (! DataTablesLib) {
+      throw new Error('DataTables library not set. See https://datatables.net/tn/19 for details.');
+    }
+
+    this._dt = new (DataTablesLib as any)(table, options);
   },
   beforeUnmount() {
     this._dt.destroy(true);
@@ -108,7 +107,7 @@ const Comp = defineComponent({
 
 // Expose a static method that can be used to add extensions
 Comp.use = function(lib: any) {
-  lib(window, jQuery);
+  DataTablesLib = lib;
 }
 
 export default Comp;

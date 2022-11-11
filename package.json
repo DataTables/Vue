@@ -1,6 +1,6 @@
 {
   "name": "datatables.net-vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue3 component for DataTables",
   "main": "dist/datatables.net-vue.ssr.js",
   "browser": "dist/datatables.net-vue.esm.js",
@@ -22,7 +22,7 @@
     "postbuild": "rimraf ./dist/types/dev ./dist/types/src/entry.d.ts"
   },
   "dependencies": {
-    "datatables.net": "^1.12.1",
+    "datatables.net": "1.12.1",
     "jquery": "^3.6.0"
   },
   "devDependencies": {

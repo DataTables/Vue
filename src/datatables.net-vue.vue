@@ -11,6 +11,7 @@ export interface IData {
 
 const Comp = defineComponent({
   name: 'DataTable',
+  inheritAttrs: false,
   expose: [
     'dt',
   ],
@@ -60,10 +61,6 @@ const Comp = defineComponent({
   },
   props: {
     ajax: null,
-    class: {
-      type: String,
-      default: '',
-    },
     columns: {
       type: Array,
       default: null,
@@ -116,7 +113,7 @@ export default Comp;
 
 <template>
   <div class="datatable" v-once>
-    <table :class="class">
+    <table v-bind="$attrs">
       <slot></slot>
     </table>
   </div>

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import DatatablesnetVue from '../src';
 import Test from './Test.vue';
+import ReactiveDt from './Reactive.vue';
 import DataTablesLib from 'datatables.net';
 
 const dtRef = ref<InstanceType<typeof DatatablesnetVue> | null>(null)
@@ -35,6 +36,10 @@ onMounted(() => {
         </thead>
       </DatatablesnetVue>
     </div>
+
+
+    <ReactiveDt />
+
   </div>
 </template>
 

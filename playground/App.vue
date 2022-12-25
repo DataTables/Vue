@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import DatatablesnetVue from '../src';
 import Test from './Test.vue';
 import DataTablesLib from 'datatables.net';
+
+const dtRef = ref<InstanceType<typeof DatatablesnetVue> | null>(null)
 
 const data = [
   [1, 2],
@@ -11,6 +14,10 @@ const data = [
 if(typeof window !== 'undefined') {
   DatatablesnetVue.use(DataTablesLib)
 }
+
+onMounted(() => {
+  console.log(dtRef.value?.dt)
+})
 </script>
 
 <template>
@@ -19,7 +26,7 @@ if(typeof window !== 'undefined') {
     <Test />
 
     <div class="m-48">
-      <DatatablesnetVue :data="data" class="display">
+      <DatatablesnetVue ref="dtRef" :data="data" class="display">
         <thead>
             <tr>
                 <th>A</th>

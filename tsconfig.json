@@ -4,37 +4,25 @@
         "module": "esnext",
         "strict": true,
         "declaration": true,
-        "declarationDir": "dist/types",
+        "declarationDir": "./temp",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "importHelpers": true,
+        "importHelpers": false,
         "moduleResolution": "node",
+        "importsNotUsedAsValues": "remove",
         "experimentalDecorators": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "sourceMap": true,
-        "baseUrl": ".",
+        "sourceMap": false,
+        "baseUrl": "./",
         "newLine": "lf",
-        "types": [
-            "node",
-            "vue"
-        ],
-        "paths": {
-            "@/*": [
-                "src/*"
-            ]
-        },
-        "plugins": [
-            {
-                "transform":"@zerollup/ts-transform-paths",
-                "exclude": ["*"]
-            }
-        ],
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "types": ["node", "vite/client"],
         "lib": [
             "esnext",
             "dom",
-            "dom.iterable",
-            "scripthost"
+            "dom.iterable"
         ]
     },
     "exclude": [

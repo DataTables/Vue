@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 // imports
-import { ref, unref, toRef, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, unref, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { Api, Config, ConfigColumns } from 'datatables.net'
 
 // props
@@ -39,7 +39,6 @@ const props = defineProps<{
 
 // setup
 const table = ref<HTMLTableElement | null>(null)
-const data = toRef(props, 'data')
 
 // data
 const dt = ref<Api<any>>()
@@ -48,32 +47,35 @@ const oldData = ref<any[]>([])
 // computed
 
 // watch
-watch(data, (newVal) => {
-  let known = dt.value?.data().toArray();
+watch(
+  () => props.data,
+  (newVal) => {
+    let known = dt.value?.data().toArray();
 
-  // Find any new rows
-  for (let n of newVal) {
-    if (!known?.includes(n)) {
-      dt.value?.row.add(n);
-    }
-  }
-
-  // Remove any old rows
-  if(typeof known !== 'undefined') {
-    for (let k of known) {
-      if (!newVal.includes(k)) {
-        dt.value?.row((_idx: any, d: any) => d === k).remove();
+    // Find any new rows
+    for (let n of newVal) {
+      if (!known?.includes(n)) {
+        dt.value?.row.add(n);
       }
     }
-  }
-  
-  // Data in other rows might have changes, so we need to invalidate the rows
-  dt.value?.rows().invalidate().draw(false);
 
-  saveOld(newVal);
-}, {
-  deep: true
-})
+    // Remove any old rows
+    if(typeof known !== 'undefined') {
+      for (let k of known) {
+        if (!newVal.includes(k)) {
+          dt.value?.row((_idx: any, d: any) => d === k).remove();
+        }
+      }
+    }
+    
+    // Data in other rows might have changes, so we need to invalidate the rows
+    dt.value?.rows().invalidate().draw(false);
+
+    saveOld(newVal);
+  }, {
+    deep: true
+  }
+)
 
 // lifecycle
 onMounted(() => {
@@ -107,7 +109,6 @@ onBeforeUnmount(() => {
 function saveOld(d: any) {
   oldData.value = d.value ? d.value.slice() : d.slice();
 }
-
 
 // expose
 defineExpose({

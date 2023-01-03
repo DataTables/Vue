@@ -1,10 +1,10 @@
 import { App, Plugin } from 'vue';
 
 // Import vue component
-import component from '@/datatables.net-vue.vue';
+import { default as component } from './datatables.net-vue.vue';
 
 // Define typescript interfaces for installable component
-type InstallableComponent = typeof component & { install: Exclude<Plugin['install'], undefined> };
+export type InstallableComponent = typeof component & { install: Exclude<Plugin['install'], undefined> };
 
 // Default export is installable instance of component.
 // IIFE injects install function into component, allowing component

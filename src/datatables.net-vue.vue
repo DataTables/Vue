@@ -99,6 +99,13 @@ onMounted(() => {
   }
 
   dt.value = new DataTablesLib(unref(table), options);
+  
+  const dtEvents = ["childRow","column-sizing","column-visibility","destroy","draw","error","init","length","order","page","preDraw","preInit","preXhr","processing","requestChild","search","stateLoadParams","stateLoaded","stateSaveParams","xhr","autoFill","preAutoFill","buttons-action","buttons-processing","column-reorder","key","key-blur","key-focus","key-refocus","key-return-submit","responsive-display","responsive-resize","rowgroup-datasrc","pre-row-reorder","row-reorder","row-reordered","dtsb-inserted","deselect","select","select-blur","selectItems","selectStyle","user-select","stateRestore-change"];
+	for(let eName of dtEvents){
+		dt.on(eName,(event)=>{			
+			this.$emit(eName,{event:event,dt:dtInstance});
+		});
+	}
 })
 
 onBeforeUnmount(() => {

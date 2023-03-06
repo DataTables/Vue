@@ -128,7 +128,7 @@ defineExpose({
 
 <template>
   <div class="datatable" v-once>
-    <table ref="table" v-bind="$attrs">
+    <table ref="table" v-bind="$attrs" width="100%">
       <slot></slot>
     </table>
   </div>

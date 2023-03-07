@@ -93,10 +93,11 @@ And in your Vue application's CSS (assuming your are using Vite or some other bu
 
 ## Development
 
-Clone this repo and then:
+Clone this repo and then in your terminal:
 
 ```
 npm install
 npm run dev
 ```
 
+You will then be able to access various examples in your browser by clicking the link shown in your terminal.

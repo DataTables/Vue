@@ -89,3 +89,14 @@ And in your Vue application's CSS (assuming your are using Vite or some other bu
 @import 'datatables.net-dt';
 @import 'datatables.net-select-dt';
 ```
+
+
+## Development
+
+Clone this repo and then:
+
+```
+npm install
+npm run dev
+```
+

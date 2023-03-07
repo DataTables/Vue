@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import DatatablesnetVue from '../src';
+import DataTable from '../src';
+import 'datatables.net-select-dt';
+
+const options = {
+    select: true
+};
 </script>
 
+<style>
+@import 'datatables.net-select-dt';
+</style>
+
 <template>
-  <div class="m-48">
-    <DatatablesnetVue class="display">
+  <div>
+    <h2>Select extension</h2>
+    <p>This example demonstrates the Select extension being used in DataTables.</p>
+    <DataTable class="display" :options="options">
       <thead>
           <tr>
               <th>Name</th>
@@ -124,6 +135,6 @@ import DatatablesnetVue from '../src';
               <th>Salary</th>
           </tr>
       </tfoot>
-    </DatatablesnetVue>
+    </DataTable>
   </div>
 </template>

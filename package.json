@@ -1,6 +1,6 @@
 {
   "name": "datatables.net-vue3",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Vue3 component for DataTables",
   "main": "datatables.net-vue3.umd.js",
   "browser": "dist/datatables.net-vue.esm.js",
@@ -14,7 +14,7 @@
   ],
   "sideEffects": false,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "cross-env NODE_ENV=production vite build && npm run build-types",
     "build-types": "vue-tsc --emitDeclarationOnly -p ./tsconfig.types.json && api-extractor run && rimraf ./temp"
   },
@@ -44,5 +44,8 @@
   "author": {
     "name": "SpryMedia Ltd",
     "url": "http://datatables.net"
+  },
+  "dependencies": {
+    "datatables.net-responsive-dt": "^2.4.0"
   }
 }

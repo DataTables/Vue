@@ -1,50 +1,69 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import DatatablesnetVue from '../src';
-import Test from './Test.vue';
+import { nextTick, ref } from 'vue'
+import DataTable from 'datatables.net';
+
+import JsData from './JsData.vue';
+import HtmlSource from './HtmlSource.vue';
+import Responsive from './Responsive.vue';
+import Select from './Select.vue';
 import ReactiveDt from './Reactive.vue';
-import DataTablesLib from 'datatables.net';
 
-const dtRef = ref<InstanceType<typeof DatatablesnetVue> | null>(null)
+let display = ref<string>('basic');
 
-const data = [
-  [1, 2],
-  [3, 4],
-];
+function show(item: string) {
+  display.value = item;
+  
+  // For the demo, when a table is made visible we need to call its
+  // `columns.adjust` method.
+  nextTick(() => {
+    let tables = DataTable.tables( { visible: true, api: true } );
 
-if(typeof window !== 'undefined') {
-  DatatablesnetVue.use(DataTablesLib)
+    (tables as any).columns.adjust();
+  });
 }
-
-onMounted(() => {
-  console.log(dtRef.value?.dt)
-})
 </script>
 
 <template>
   <div>
+    <h1>DataTables Vue 3 component examples</h1>
 
-    <Test />
+    <ul class="example-list">
+      <li><button @click="show('basic')">HTML sourced data</button></li>
+      <li><button @click="show('js-data')">Javascript sourced data</button></li>
+      <li><button @click="show('responsive')">Responsive extension</button></li>
+      <li><button @click="show('select')">Select extension</button></li>
+      <li><button @click="show('reactive')">Reactive data</button></li>
+    </ul>
 
-    <div class="m-48">
-      <DatatablesnetVue ref="dtRef" :data="data" class="display">
-        <thead>
-            <tr>
-                <th>A</th>
-                <th>B</th>
-            </tr>
-        </thead>
-      </DatatablesnetVue>
+    <div v-show="display === 'basic'">
+      <HtmlSource />
     </div>
-
-
-    <ReactiveDt />
-
+    <div v-show="display === 'js-data'">
+      <JsData />
+    </div>
+    <div v-show="display === 'responsive'">
+      <Responsive />
+    </div>
+    <div v-show="display === 'select'">
+      <Select />
+    </div>
+    <div v-show="display === 'reactive'">
+      <ReactiveDt />
+    </div>
   </div>
 </template>
 
 <style>
-  .m-48 {
-    margin: 3rem
-  }
+
+ul.example-list button {
+  background: none;
+  border: none;
+  color: blue;
+}
+
+ul.example-list button:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 </style>

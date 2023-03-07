@@ -5,10 +5,7 @@ import DataTable from '../src';
 import DataTablesLib from 'datatables.net';
 import 'datatables.net-select';
 
-
-if(typeof window !== 'undefined') {
-  DataTable.use(DataTablesLib);
-}
+DataTable.use(DataTablesLib);
 
 let dt: any
 let counter = 0;
@@ -75,11 +72,9 @@ function remove() {
 
 <template>
   <div class="m-48">
-    <h1>Simple table</h1>
-    <h2>DataTables + Vue3 example</h2>
+    <h2>Using the DataTables API</h2>
     <p>
-      This example demonstrates the <code>datatables.net-vue3</code> package
-      being used to display an interactive DataTable in a Vue application.
+      This example shows how the <a href="https://datatables.net/manual/api">DataTables API</a> can be used to interact with the DataTable in the Vue component.
     </p>
 
     <button @click="add">Add new row</button><br />

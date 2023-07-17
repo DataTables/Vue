@@ -1,6 +1,6 @@
 {
   "name": "datatables.net-vue3",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Vue3 component for DataTables",
   "main": "dist/datatables.net-vue3.umd.js",
   "module": "dist/datatables.net-vue3.mjs",

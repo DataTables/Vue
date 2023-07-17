@@ -9,7 +9,7 @@
   "types": "dist/datatables.net-vue3.d.ts",
   "files": [
     "dist/*",
-    "src/**/*.vue"
+    "src/**/*"
   ],
   "sideEffects": false,
   "scripts": {

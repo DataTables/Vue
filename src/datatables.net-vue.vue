@@ -111,8 +111,14 @@ onMounted(() => {
 	// `on` method and then emit them to our Vue component
 	for (let eName of dtEvents) {
 		if (dt.value && inst) {
-			dt.value.on(eName, (event) => {
-				inst.emit(eName, { event: event, dt: dt });
+			dt.value.on(eName, function() {
+				var args = Array.from(arguments);
+				var event = args.shift();
+
+				args.unshift({ event: event, dt: dt });
+				args.unshift(eName);
+
+				inst.emit.apply(inst, args as any);
 			});
 		}
 	}

@@ -43,8 +43,5 @@
   "author": {
     "name": "SpryMedia Ltd",
     "url": "http://datatables.net"
-  },
-  "dependencies": {
-    "datatables.net-responsive-dt": "^2.4.0"
   }
 }

@@ -86,6 +86,11 @@ watch(
 onMounted(() => {
 	const inst = getCurrentInstance();
 	let options: any = props.options || {};
+	if(!Object.prototype.hasOwnProperty.call(options,"initComplete")){
+		options.initComplete = ()=>{
+			this.$emit("init");
+		};
+	}	
 
 	if (props.data) {
 		options.data = props.data;

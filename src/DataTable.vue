@@ -94,65 +94,44 @@ onMounted(() => {
 
 	if (props.columns) {
 		options.columns = props.columns;
+		applyRenderers(options.columns, inst);
 	}
 
 	if (props.ajax) {
 		options.ajax = props.ajax;
 	}
 
-	if (!DataTablesLib) {
-		throw new Error(
-			'DataTables library not set. See https://datatables.net/tn/19 for details.'
-		);
-	}
-
-	if (!options.columnDefs) {
+	// Auto detect column slots (those using a `column-` prefix,
+	// if not using a prefix, they need to be manually assigned).
+	if (! options.columnDefs) {
 		options.columnDefs = [];
 	}
 
 	if (inst) {
-		let slotNames = Object.keys(inst.slots);
+		let slots = Object.keys(inst.slots);
 
-		if (slotNames.length && !DataTablesLib.versionCheck('2')) {
-			throw new Error(
-				'DataTables 2 is required to be able to use template slots for columns.'
-			);
-		}
+		for (let i=0 ; i<slots.length ; i++) {
+			let name = slots[i];
+			
+			if (name.match(/^column\-/)) {
+				let part = name.replace('column-', '');
 
-		slotNames.forEach((name) => {
-			if (name.match(/^column-\d+$/)) {
 				options.columnDefs.push({
-					target: parseInt(name.replace('column-', '')),
-					render: function (
-						data: any,
-						type: string,
-						row: any,
-						meta: any
-					) {
-						let key = meta.row + ',' + meta.col;
-
-						if (!elements[key]) {
-							elements[key] = document.createElement('div');
-
-							let content = h(
-								'div',
-								inst!.slots[name]!({
-									cellData: data,
-									colIndex: meta.col,
-									rowData: row,
-									rowIndex: meta.row,
-									type
-								})
-							);
-
-							render(content, elements[key]);
-						}
-
-						return elements[key].childNodes[0];
-					}
+					target: part.match(/^\d+$/)
+						? parseInt(part)
+						: part + ':name',
+					render: '#' + name
 				});
 			}
-		});
+		}
+
+		applyRenderers(options.columnDefs, inst);
+	}
+
+	if (!DataTablesLib) {
+		throw new Error(
+			'DataTables library not set. See https://datatables.net/tn/19 for details.'
+		);
 	}
 
 	// Create the DataTable!
@@ -179,9 +158,77 @@ onBeforeUnmount(() => {
 	dt.value?.destroy(true);
 });
 
-// methods
+// Methods
 function saveOld(d: any) {
 	oldData.value = d.value ? d.value.slice() : d.slice();
+}
+
+/**
+ * Create a DataTables rendering function for a slot
+ *
+ * @param slot Slot to render
+ */
+function createRenderer(slot: any) {
+	return function (
+		data: any,
+		type: string,
+		row: any,
+		meta: any
+	) {
+		let key = meta.row + ',' + meta.col;
+
+		if (!elements[key]) {
+			let content = h('div', slot({
+				cellData: data,
+				colIndex: meta.col,
+				rowData: row,
+				rowIndex: meta.row,
+				type
+			}));
+
+			elements[key] = document.createElement('div');
+			render(content, elements[key]);
+		}
+
+		return elements[key];
+	}
+}
+
+/**
+ * Check and see if there are slots that should be applied to a column
+ *
+ * @param columns Array of columns (`columns` or `columnDefs`)
+ * @param inst Vue instance
+ */
+function applyRenderers(columns: any[], inst: any) {
+	if (! inst) {
+		return;
+	}
+
+	for (let i=0 ; i<columns.length ; i++) {
+		let col = columns[i];
+
+		// Top level rendering given as a slot name
+		if (typeof col.render === 'string' && col.render.charAt(0) === '#') {
+			var name = col.render.replace('#', '');
+
+			if (inst!.slots[name]) {
+				col.render = createRenderer(inst!.slots[name]);
+			}
+		}
+		else if (
+			// Display orhtogonal data point given as a slot name
+			typeof col.render === 'object' &&
+			typeof col.render.display === 'string' &&
+			col.render.display.charAt(0) === '#'
+		) {
+			var name = col.render.display.replace('#', '');
+
+			if (inst!.slots[name]) {
+				col.render.display = createRenderer(inst!.slots[name]);
+			}
+		}
+	}
 }
 
 // expose

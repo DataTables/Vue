@@ -94,6 +94,9 @@ onMounted(() => {
 
 	if (props.columns) {
 		options.columns = props.columns;
+	}
+
+	if (options.columns) {
 		applyRenderers(options.columns, inst);
 	}
 

@@ -140,17 +140,15 @@ onMounted(() => {
 	// Create the DataTable!
 	dt.value = new DataTablesLib(unref(table), options);
 
-	// When server-side processing is enabled, the data indexes for rows
-	// are reused, so we need to clear out any rendered elements for slots.
-	if (dt.value?.page.info().serverSide) {
-		dt.value?.on('preDraw', function () {
-			let keys = Object.keys(elements);
+	// When server-side processing or Ajax loading data, the data indexes for
+	// rows are reused, so we need to clear out any rendered elements for slots.
+	dt.value?.on('preXhr', function () {
+		let keys = Object.keys(elements);
 
-			for (var i=0 ; i<keys.length ; i++) {
-				delete elements[keys[i]];
-			}
-		});
-	}
+		for (var i=0 ; i<keys.length ; i++) {
+			delete elements[keys[i]];
+		}
+	});
 
 	// Re-export all DataTables events by listening for them using DataTable's
 	// `on` method and then emit them to our Vue component

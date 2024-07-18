@@ -74,8 +74,37 @@ watch(
 			delete elements[keys[i]];
 		}
 
-		api.clear();
-		api.rows.add(newVal).draw(false);
+		const rowId = api.context[0].rowId;
+
+		// If no row id set clear table and add new data
+		if (!rowId) {
+			api.clear();
+			api.rows.add(newVal).draw(false);
+			return;
+		}
+	
+		var key = api.context[0].rowId,
+			dataKeys = newVal.map(function (item: any) { return item[key]; });
+	
+		// remove obsolete rows
+		api.rows(function (idx, rowData) { return !dataKeys.includes(rowData[key]); }).remove();
+	
+		// update existing rows
+		var updatedKeys: any[] = [];
+		api.rows().every(function () {
+			var oldData = this.data(),
+				newData = newVal.find(function (x: any) { return x[key] === oldData[key]; });
+			this.data(newData);
+			updatedKeys.push(newData[key]);
+			this.invalidate();
+		});
+	
+		// add missing rows
+		api.rows.add(newVal.filter(function (x: any) {
+			return updatedKeys.find(function (k) { return k === x[key]; }) === undefined;
+		}));
+		
+		api.draw();
 	},
 	{
 		deep: true

@@ -8,6 +8,7 @@ import { name as packageName } from './package.json';
 export default defineConfig(() => ({
   plugins: [vue()],
   build: {
+    // minify: false,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: packageName,

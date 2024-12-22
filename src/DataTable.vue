@@ -68,11 +68,7 @@ watch(
 			return;
 		}
 
-		var keys = Object.keys(elements);
-
-		for (var i = 0; i < keys.length; i++) {
-			delete elements[keys[i]];
-		}
+		deleteElements(api);
 
 		api.clear();
 		api.rows.add(newVal).draw(false);
@@ -85,7 +81,7 @@ watch(
 // lifecycle
 onMounted(() => {
 	const inst = getCurrentInstance();
-	let options: any = props.options || {};
+	let options: any = Object.assign({}, props.options) || {};
 
 	if (props.data) {
 		options.data = props.data;
@@ -143,11 +139,7 @@ onMounted(() => {
 	// When server-side processing or Ajax loading data, the data indexes for
 	// rows are reused, so we need to clear out any rendered elements for slots.
 	dt.value?.on('preXhr', function () {
-		let keys = Object.keys(elements);
-
-		for (var i=0 ; i<keys.length ; i++) {
-			delete elements[keys[i]];
-		}
+		deleteElements(dt.value!);
 	});
 
 	// Re-export all DataTables events by listening for them using DataTable's
@@ -168,6 +160,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+	deleteElements(dt.value!);
 	dt.value?.destroy(true);
 });
 
@@ -230,7 +223,7 @@ function applyRenderers(columns: any[], inst: any) {
 			}
 		}
 		else if (
-			// Display orhtogonal data point given as a slot name
+			// Display orthogonal data point given as a slot name
 			typeof col.render === 'object' &&
 			typeof col.render.display === 'string' &&
 			col.render.display.charAt(0) === '#'
@@ -240,6 +233,17 @@ function applyRenderers(columns: any[], inst: any) {
 			if (inst!.slots[name]) {
 				col.render.display = createRenderer(inst!.slots[name]);
 			}
+		}
+	}
+}
+
+function deleteElements(dt: Api) {
+	let keys = Object.keys(elements);
+	let id = (dt.table().node() as any).id;
+
+	for (var i = 0; i < keys.length; i++) {
+		if (keys[i].indexOf(id + ',') === 0) {
+			delete elements[keys[i]];
 		}
 	}
 }

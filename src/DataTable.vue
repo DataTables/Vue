@@ -181,7 +181,7 @@ function createRenderer(slot: any) {
 		row: any,
 		meta: any
 	) {
-		let key = meta.row + ',' + meta.col;
+		let key = meta.settings.sTableId + ',' + meta.row + ',' + meta.col;
 
 		if (!elements[key]) {
 			let content = h('div', slot({

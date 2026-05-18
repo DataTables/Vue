@@ -20,7 +20,8 @@ import {
 	watch,
 	onMounted,
 	onBeforeUnmount,
-	getCurrentInstance
+	getCurrentInstance,
+	Fragment
 } from 'vue';
 import type { Api, Config, ConfigColumns } from 'datatables.net';
 import dtEvents from './dtEvents';
@@ -185,7 +186,7 @@ function createRenderer(slot: any) {
 			',' + meta.row + ',' + meta.col;
 
 		if (!elements[key]) {
-			let content = h('div', slot({
+			let content = h(Fragment, slot({
 				cellData: data,
 				colIndex: meta.col,
 				rowData: row,

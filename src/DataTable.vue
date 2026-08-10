@@ -12,17 +12,17 @@ export default {
 
 <script lang="ts" setup>
 // imports
+import type { Api, Config, ConfigColumns } from 'datatables.net';
 import {
+	getCurrentInstance,
 	h,
+	onBeforeUnmount,
+	onMounted,
 	ref,
 	render,
 	unref,
-	watch,
-	onMounted,
-	onBeforeUnmount,
-	getCurrentInstance
+	watch
 } from 'vue';
-import type { Api, Config, ConfigColumns } from 'datatables.net';
 import dtEvents from './dtEvents';
 
 // props
@@ -138,7 +138,14 @@ onMounted(() => {
 
 	// When server-side processing or Ajax loading data, the data indexes for
 	// rows are reused, so we need to clear out any rendered elements for slots.
-	dt.value?.on('preXhr', function () {
+	dt.value?.on('preXhr', () => {
+		deleteElements(dt.value!);
+	});
+
+	// When column reordering, we don't want to use items from cache, as they
+	// are stored by row / column index, which will be changed by the reordering
+	// action.
+	dt.value?.on('column-reorder', () => {
 		deleteElements(dt.value!);
 	});
 

@@ -93,6 +93,7 @@ onMounted(() => {
 	}
 
 	if (options.columns) {
+		options.columns = cloneColumns(options.columns);
 		applyRenderers(options.columns, inst);
 	}
 
@@ -104,6 +105,9 @@ onMounted(() => {
 	// if not using a prefix, they need to be manually assigned).
 	if (! options.columnDefs) {
 		options.columnDefs = [];
+	}
+	else {
+		options.columnDefs = cloneColumns(options.columnDefs);
 	}
 
 	if (inst) {
@@ -206,6 +210,17 @@ function createRenderer(slot: any) {
 
 		return elements[key];
 	}
+}
+
+// The weird condition is to support render objects ( col.render = { display: fn(d) =>...} )
+function cloneColumns(columns: any[]) {
+	return columns.map((col) => {
+		if (col && typeof col.render === 'object' && col.render !== null) {
+			return { ...col, render: { ...col.render } };
+		}
+
+		return { ...col };
+	});
 }
 
 /**

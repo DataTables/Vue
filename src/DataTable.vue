@@ -21,7 +21,11 @@ import {
 	ref,
 	render,
 	unref,
-	watch
+	watch,
+	onMounted,
+	onBeforeUnmount,
+	getCurrentInstance,
+	Fragment
 } from 'vue';
 import dtEvents from './dtEvents';
 
@@ -192,7 +196,7 @@ function createRenderer(slot: any) {
 			',' + meta.row + ',' + meta.col;
 
 		if (!elements[key]) {
-			let content = h('div', slot({
+			let content = h(Fragment, slot({
 				cellData: data,
 				colIndex: meta.col,
 				rowData: row,

@@ -175,14 +175,14 @@ const DataTableComponent = defineComponent({
 			}
 
 			const inst = getCurrentInstance();
-			const options: any = Object.assign({}, props.options) || {};
+			const options: Options = DtCore.util.object.assignDeep({}, props.options);
 
 			if (props.data) {
 				options.data = props.data;
 			}
 
 			if (props.columns) {
-				options.columns = props.columns;
+				options.columns = DtCore.util.object.assignDeep([], props.columns);
 			}
 
 			if (options.columns) {

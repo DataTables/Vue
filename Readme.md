@@ -1,7 +1,7 @@
 
-# DataTables component for Vue 3
+# DataTables component for Vue
 
-This library provides a Vue 3 component for [DataTables.net](https://datatables.net) to be used inside a Vue application.
+This library provides a Vue component for [DataTables.net](https://datatables.net) to be used inside a Vue application.
 
 To install:
 
@@ -15,9 +15,9 @@ In your Vue component you can then:
 
 ```js
 import DataTable from 'datatables.net-vue3'
-import DataTablesLib from 'datatables.net';
+import DtCore from 'datatables.net';
 
-DataTable.use(DataTablesLib);
+DataTable.use(DtCore);
 ```
 
 Note how both the DataTables core and DataTables Vue component must both be imported. This is so the extensions for DataTables can also be imported in this scope and used (see below). This behaviour is **new in v2** of this component and is required for compatibility with DataTables 1.13 and newer.
@@ -55,10 +55,10 @@ DataTables provides [a wide range of extensions](https://datatables.net/extensio
 
 ```js
 import DataTable from 'datatables.net-vue3'
-import DataTablesLib from 'datatables.net';
+import DtCore from 'datatables.net';
 import 'datatables.net-select';
 
-DataTable.use(DataTablesLib);
+DataTable.use(DtCore);
 ```
 
 
@@ -77,10 +77,10 @@ Your JS import would then be:
 
 ```js
 import DataTable from 'datatables.net-vue3'
-import DataTablesLib from 'datatables.net-bs5';
+import DtCore from 'datatables.net-bs5';
 import 'datatables.net-select-bs5';
 
-DataTable.use(DataTablesLib);
+DataTable.use(DtCore);
 ```
 
 And in your Vue application's CSS (assuming your are using Vite or some other builder which can resolve the `style` property for npm packages):

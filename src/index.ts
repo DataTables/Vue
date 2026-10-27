@@ -1,7 +1,7 @@
 import { App, Plugin } from 'vue';
 
 // Import vue component
-import { default as DataTable } from './DataTable.vue';
+import DataTable from './DataTable';
 
 // Define typescript interfaces for installable component
 export type InstallableComponent = typeof DataTable & { install: Exclude<Plugin['install'], undefined> };
@@ -23,7 +23,3 @@ export default /*#__PURE__*/((): InstallableComponent => {
 export {
   DataTable
 };
-
-// It's possible to expose named exports when writing components that can
-// also be used as directives, etc. - eg. import { RollupDemoDirective } from 'rollup-demo';
-// export const RollupDemoDirective = directive;

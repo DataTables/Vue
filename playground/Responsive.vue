@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import DataTable from '../src';
 import 'datatables.net-responsive-dt';
+import DataTable from '../src';
 
 const options = {
     responsive: true

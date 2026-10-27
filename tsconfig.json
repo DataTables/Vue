@@ -1,32 +1,31 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "esnext",
-        "strict": true,
-        "declaration": true,
-        "declarationDir": "./temp",
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "importHelpers": false,
-        "moduleResolution": "node",
-        "importsNotUsedAsValues": "remove",
-        "experimentalDecorators": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "sourceMap": false,
-        "baseUrl": "./",
-        "newLine": "lf",
-        "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "types": ["node", "vite/client"],
-        "lib": [
-            "esnext",
-            "dom",
-            "dom.iterable"
-        ]
-    },
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+	"compilerOptions": {
+		/* Modules */
+		"module": "ES2015",
+		"moduleResolution": "bundler",
+
+		/* Emit */
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"sourceMap": true,
+		"rootDir": "./src",
+		"outDir": "dist",
+		"declarationDir": "types",
+
+		/* Interop Constraints */
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+
+		/* Type Checking */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"allowUnreachableCode": false,
+
+		/* Completeness */
+		"skipLibCheck": true
+	}
 }

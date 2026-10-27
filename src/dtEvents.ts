@@ -1,4 +1,3 @@
-
 export default [
 	'childRow',
 	'column-sizing',
@@ -43,5 +42,5 @@ export default [
 	'selectItems',
 	'selectStyle',
 	'user-select',
-	'stateRestore-change',
+	'stateRestore-change'
 ];

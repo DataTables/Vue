@@ -1,4 +1,4 @@
-import type { Api, ColumnOptions, Config } from 'datatables.net';
+import type { Api, ColumnOptions, DataTablesStatic, Options } from 'datatables.net';
 import {
 	defineComponent,
 	Fragment,
@@ -16,13 +16,11 @@ import {
 } from 'vue';
 import dtEvents from './dtEvents';
 
-console.log('allan is here');
-
-export let DataTablesLib: any;
+let DtCore: DataTablesStatic;
 
 export interface DataTableProps {
 	/** Load data for the table's content from an Ajax source */
-	ajax?: Config['ajax'];
+	ajax?: Options['ajax'];
 
 	/** Set column specific initialisation properties */
 	columns?: ColumnOptions[];
@@ -31,7 +29,7 @@ export interface DataTableProps {
 	data?: any;
 
 	/** DataTables options */
-	options?: Config;
+	options?: Options;
 }
 
 export type SlotElementMap = Record<string, HTMLElement>;
@@ -66,7 +64,7 @@ function createRenderer(slot: (...args: any[]) => any, elements: SlotElementMap)
 /**
  * Inspect columns/columnDefs and wire `#slotName` references to Vue slots.
  */
-export function applyRenderers(
+function applyRenderers(
 	columns: any[],
 	inst: ComponentInternalInstance | null,
 	elements: SlotElementMap
@@ -103,7 +101,7 @@ export function applyRenderers(
  * Remove and unmount all rendered Vue slot elements belonging to a specific
  * table.
  */
-export function deleteElements(elements: SlotElementMap, dt: Api): void {
+function deleteElements(elements: SlotElementMap, dt: Api): void {
 	const keys = Object.keys(elements);
 	const tableNode = dt.table().node() as HTMLElement | undefined;
 	const id = tableNode?.id;
@@ -126,7 +124,7 @@ const DataTableComponent = defineComponent({
 	inheritAttrs: false,
 	props: {
 		ajax: {
-			type: [String, Function, Object] as PropType<Config['ajax']>,
+			type: [String, Function, Object] as PropType<Options['ajax']>,
 			default: undefined
 		},
 		columns: {
@@ -138,24 +136,24 @@ const DataTableComponent = defineComponent({
 			default: undefined
 		},
 		options: {
-			type: Object as PropType<Config>,
+			type: Object as PropType<Options>,
 			default: undefined
 		}
 	},
 	emits: dtEvents,
-	setup(props, {attrs, slots, expose}) {
+	setup(props, { attrs, slots, expose }) {
 		const table = ref<HTMLTableElement | null>(null);
 		const elements: SlotElementMap = {};
 
 		const dt = ref<Api<any>>();
 
 		// Expose dt instance to parent components
-		expose({dt});
+		expose({ dt });
 
 		// Watch data changes
 		watch(
 			() => props.data,
-			(newVal) => {
+			newVal => {
 				const api = dt.value;
 				if (!api) {
 					return;
@@ -165,11 +163,17 @@ const DataTableComponent = defineComponent({
 				api.clear();
 				api.rows.add(newVal).draw(false);
 			},
-			{deep: true}
+			{ deep: true }
 		);
 
 		// Lifecycle
 		onMounted(() => {
+			if (!DtCore) {
+				throw new Error(
+					'DataTables library not set. See https://datatables.net/tn/19 for details.'
+				);
+			}
+
 			const inst = getCurrentInstance();
 			const options: any = Object.assign({}, props.options) || {};
 
@@ -198,6 +202,7 @@ const DataTableComponent = defineComponent({
 
 				for (let i = 0; i < slotKeys.length; i++) {
 					const name = slotKeys[i];
+
 					if (name && name.match(/^column-/)) {
 						const part = name.replace('column-', '');
 
@@ -211,14 +216,8 @@ const DataTableComponent = defineComponent({
 				applyRenderers(options.columnDefs, inst, elements);
 			}
 
-			if (!DataTablesLib) {
-				throw new Error(
-					'DataTables library not set. See https://datatables.net/tn/19 for details.'
-				);
-			}
-
 			// Initialize DataTables
-			dt.value = new DataTablesLib(unref(table), options);
+			dt.value = new DtCore(unref(table)!, options);
 
 			dt.value?.on('preXhr', () => {
 				deleteElements(elements, dt.value!);
@@ -235,7 +234,7 @@ const DataTableComponent = defineComponent({
 						const args = Array.from(arguments);
 						const event = args.shift();
 
-						args.unshift({event: event, dt: dt});
+						args.unshift({ event: event, dt: dt });
 						args.unshift(eName);
 
 						inst.emit.apply(inst, args as any);
@@ -257,13 +256,13 @@ const DataTableComponent = defineComponent({
 
 		return () => {
 			if (!staticVNode) {
-				staticVNode = h('div', {class: 'datatable'}, [
+				staticVNode = h('div', { class: 'datatable' }, [
 					h(
 						'table',
 						{
 							ref: table,
 							...attrs,
-							style: {width: '100%'}
+							style: { width: '100%' }
 						},
 						slots.default?.()
 					)
@@ -285,11 +284,11 @@ function use(): any;
 function use(lib: any): void;
 function use(lib?: any): any {
 	if (lib) {
-		DataTablesLib = lib;
+		DtCore = lib;
 		return;
 	}
 
-	return DataTablesLib;
+	return DtCore;
 }
 
 const DataTable = DataTableComponent as unknown as DataTableType;

@@ -19,7 +19,7 @@ export default defineConfig([
 
 	// UMD bundle
 	{
-		entry: ['./src/index.ts'],
+		entry: ['./src/index.umd.ts'],
 		format: ['umd'],
 		outDir: 'dist',
 		clean: false, // Don't wipe the ESM and dts files!
@@ -28,7 +28,7 @@ export default defineConfig([
 		},
 		outputOptions: {
 			entryFileNames: 'index.js',
-			name: 'DataTable',
+			name: 'DataTableVue',
 			globals: {
 				vue: 'Vue'
 			}

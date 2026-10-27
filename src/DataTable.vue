@@ -14,6 +14,7 @@ export default {
 // imports
 import type { Api, Config, ConfigColumns } from 'datatables.net';
 import {
+	Fragment,
 	getCurrentInstance,
 	h,
 	onBeforeUnmount,
@@ -21,11 +22,7 @@ import {
 	ref,
 	render,
 	unref,
-	watch,
-	onMounted,
-	onBeforeUnmount,
-	getCurrentInstance,
-	Fragment
+	watch
 } from 'vue';
 import dtEvents from './dtEvents';
 

@@ -3,6 +3,11 @@
 
 This library provides a Vue component for [DataTables.net](https://datatables.net) to be used inside a [Vue application](https://vuejs.org/).
 
+**Please refer to the [Vue DataTables documentation](https://datatables.net/manual/components/vue) for full information on working with this component,** including a [60 second quick-start guide](https://datatables.net/manual/components/vue/quick-start).
+
+
+## Installation
+
 To install:
 
 ```
@@ -11,10 +16,13 @@ npm install --save datatables.net-dt datatables.net-vue3
 
 This will install DataTables core (with default styling) and the Vue DataTables component. Other DataTables extensions can also be installed in your application - see below.
 
+
+## Usage
+
 In your Vue component you can then import those two modules:
 
 ```js
-import DataTable from 'datatables.net-vue3'
+import DataTable, { Column } from 'datatables.net-vue3'
 import DtCore from 'datatables.net';
 
 DataTable.use(DtCore);
@@ -31,18 +39,33 @@ Doing the above will make a `<DataTable>` component available. It provides the f
 * `options` - The [DataTables options](https://datatables.net/reference/option) for the table. Note that this can include `columns`, `data` and `ajax` - if they are provided by one of the properties from above that will override a matching option given here.
 
 
-### Templates
+### Columns
 
-The `DataTable` component provides a single slot that can be used to define the HTML for the table structure - i.e. the `thead` and `tfoot`:
+The `DataTable` component provides the ability to define columns using the `<Column>` component that it exports. For example for data with the structure:
+
+```js
+const data = [
+    {
+      "id": "1",
+      "name": "Tiger Nixon",
+      "position": "System Architect",
+      "salary": "$320,800",
+      "start_date": "2011/04/25",
+      "office": "Edinburgh",
+      "extn": "5421"
+    },
+	// ... etc
+]
+```
+
+Use:
 
 ```html
-<DataTable :data="[[1,2], [3,4]]" class="display">
-	<thead>
-		<tr>
-			<th>A</th>
-			<th>B</th>
-		</tr>
-	</thead>
+<DataTable :data="data" class="display">
+	<Column title="Name" data="name" />
+	<Column title="Position" data="position" />
+	<Column title="Salary" data="salary" />
+	<Column title="Start date" data="start_date" />
 </DataTable>
 ```
 
@@ -100,4 +123,4 @@ npm install
 npm run build
 ```
 
-This will build a local copy of the Vue DataTables component in `dist`, which you can then `npm link` for testing.
+This will build a local copy of the Vue DataTables component in `dist`, which you can then `npm link` for testing with a local app, or `npm run test` to run the unit tests.

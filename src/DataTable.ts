@@ -14,6 +14,7 @@ import {
 	type PropType,
 	type VNode
 } from 'vue';
+import Column, { type ColumnProps } from './Column';
 import dtEvents from './dtEvents';
 
 let DtCore: DataTablesStatic;
@@ -119,6 +120,99 @@ function deleteElements(elements: SlotElementMap, dt: Api): void {
 	}
 }
 
+/**
+ * Recursively flatten VNodes to unwrap Vue Fragments (e.g. from v-for).
+ */
+export function getVNodes(nodes: VNode[], filter?: (n: VNode) => boolean): VNode[] {
+	const result: VNode[] = [];
+
+	for (const node of nodes) {
+		if (node.type === Fragment && Array.isArray(node.children)) {
+			result.push(...getVNodes(node.children as VNode[]));
+		}
+		else {
+			result.push(node);
+		}
+	}
+
+	return filter ? result.filter(filter) : result;
+}
+
+/**
+ * Check if a VNode represents a <Column> component.
+ */
+export function isColumn(node: VNode): boolean {
+	if (!node || typeof node !== 'object') {
+		return false;
+	}
+	if (node.type === Column) {
+		return true;
+	}
+
+	const comp = node.type as any;
+	return comp?.name === 'Column' || comp?.name === 'DataTableColumn';
+}
+
+/**
+ * Parse <Column> components into DataTables column configurations.
+ */
+export function parseColumnVNodes(vnodes: VNode[], elements: SlotElementMap): ColumnOptions[] {
+	const columns: ColumnOptions[] = [];
+
+	for (const node of vnodes) {
+		const colProps = (node.props || {}) as ColumnProps;
+		const colConfig: ColumnOptions = Object.assign({}, colProps.options);
+
+		if (colProps.data !== undefined) {
+			colConfig.data = colProps.data;
+		}
+
+		if (colProps.title !== undefined) {
+			colConfig.title = colProps.title;
+		}
+
+		if (colProps.footer !== undefined) {
+			colConfig.footer = colProps.footer;
+		}
+
+		if (colProps.render !== undefined) {
+			colConfig.render = colProps.render;
+		}
+
+		// If the <Column> contains a scoped slot template, use it as a custom
+		// cell renderer
+		let slotFn: ((...args: any[]) => any) | null = null;
+		const children = node.children as any;
+
+		if (typeof children === 'function') {
+			// Direct render function (e.g., TSX or manual h)
+			slotFn = children;
+		}
+		else if (
+			children &&
+			typeof children === 'object' &&
+			typeof children.default === 'function'
+		) {
+			// Standard Vue template slot: <Column #default="..."> or <Column
+			// v-slot="...">
+			slotFn = children.default;
+		}
+		else if (Array.isArray(children) && children.length > 0) {
+			// Raw VNodes passed as direct static children:
+			// <Column><button>...</button></Column>
+			slotFn = () => children;
+		}
+
+		if (slotFn) {
+			colConfig.render = createRenderer(slotFn, elements);
+		}
+
+		columns.push(colConfig);
+	}
+
+	return columns;
+}
+
 const DataTableComponent = defineComponent({
 	name: 'Datatables.netVue',
 	inheritAttrs: false,
@@ -181,7 +275,15 @@ const DataTableComponent = defineComponent({
 				options.data = props.data;
 			}
 
-			if (props.columns) {
+			// Check for any `<Column>` child nodes
+			const children = slots.default ? slots.default() : [];
+			const flatSlotChildren = getVNodes(children, n => isColumn(n));
+			const parsedColumns = parseColumnVNodes(flatSlotChildren, elements);
+
+			if (parsedColumns.length > 0) {
+				options.columns = parsedColumns;
+			}
+			else if (props.columns) {
 				options.columns = DtCore.util.object.assignDeep([], props.columns);
 			}
 
@@ -256,6 +358,10 @@ const DataTableComponent = defineComponent({
 
 		return () => {
 			if (!staticVNode) {
+				// Get nodes which aren't <Column>s - e.g. <thead> or <tfoot>
+				const children = slots.default ? slots.default() : [];
+				const tableNodes = getVNodes(children, n => !isColumn(n));
+
 				staticVNode = h('div', { class: 'datatable' }, [
 					h(
 						'table',
@@ -264,7 +370,7 @@ const DataTableComponent = defineComponent({
 							...attrs,
 							style: { width: '100%' }
 						},
-						slots.default?.()
+						tableNodes.length > 0 ? tableNodes : undefined
 					)
 				]);
 			}

@@ -1,17 +1,17 @@
 
 # DataTables component for Vue
 
-This library provides a Vue component for [DataTables.net](https://datatables.net) to be used inside a Vue application.
+This library provides a Vue component for [DataTables.net](https://datatables.net) to be used inside a [Vue application](https://vuejs.org/).
 
 To install:
 
 ```
-npm install --save datatables.net-vue3
+npm install --save datatables.net-dt datatables.net-vue3
 ```
 
-This will automatically install DataTables as a dependency. Other DataTables extensions can also be installed in your application - see below.
+This will install DataTables core (with default styling) and the Vue DataTables component. Other DataTables extensions can also be installed in your application - see below.
 
-In your Vue component you can then:
+In your Vue component you can then import those two modules:
 
 ```js
 import DataTable from 'datatables.net-vue3'
@@ -20,9 +20,9 @@ import DtCore from 'datatables.net';
 DataTable.use(DtCore);
 ```
 
-Note how both the DataTables core and DataTables Vue component must both be imported. This is so the extensions for DataTables can also be imported in this scope and used (see below). This behaviour is **new in v2** of this component and is required for compatibility with DataTables 1.13 and newer.
+Note how both the DataTables core and DataTables Vue component must both be imported. This is so the extensions for DataTables can also be imported in this scope and used (see below).
 
-Which makes a `DataTable` component available. It provides the following parameters:
+Doing the above will make a `<DataTable>` component available. It provides the following parameters:
 
 * `columns` - Define the columns array used for [DataTables initialisation](https://datatables.net/reference/option/#datatables%20-%20columns)
 * `data` - [Data array for DataTables](https://datatables.net/reference/option/data). This is _optional_ and if you are using Ajax to load the DataTable data is not required.
@@ -97,7 +97,7 @@ Clone this repo and then in your terminal:
 
 ```
 npm install
-npm run dev
+npm run build
 ```
 
-You will then be able to access various examples in your browser by clicking the link shown in your terminal.
+This will build a local copy of the Vue DataTables component in `dist`, which you can then `npm link` for testing.

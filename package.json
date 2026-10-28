@@ -21,7 +21,6 @@
 		"src/**/*"
 	],
 	"scripts": {
-		"dev": "vite --host",
 		"build": "tsdown"
 	},
 	"devDependencies": {

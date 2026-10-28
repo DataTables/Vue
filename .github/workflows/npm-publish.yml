@@ -1,0 +1,25 @@
+name: Publish package to npm
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false  # never use caching in release builds
+      - run: npm install
+      - run: npm run build
+      - run: npm run test
+      - run: npm stage publish

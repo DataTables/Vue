@@ -1,0 +1,21 @@
+# This workflow will build and run tests
+name: Build and test
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: npm install
+      - run: npm run build
+      - run: npm run test

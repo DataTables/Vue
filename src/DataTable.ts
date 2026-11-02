@@ -381,9 +381,28 @@ const DataTableComponent = defineComponent({
 
 // Typing for component + static .use() overload
 export interface DataTableType extends ReturnType<typeof defineComponent> {
+	/**
+	 * Create a new Vue DataTables component instance.
+	 */
 	new (): InstanceType<typeof DataTableComponent>;
+
+	/**
+	 * Get the DataTables core library that was configured for use by the
+	 * Vue DataTables component.
+	 */
 	use(): any;
+
+	/**
+	 * Set the DataTables core library to use
+	 *
+	 * @param lib DataTables core library
+	 */
 	use(lib: any): void;
+
+	/**
+	 * Current version
+	 */
+	version: string;
 }
 
 function use(): any;
@@ -399,5 +418,6 @@ function use(lib?: any): any {
 
 const DataTable = DataTableComponent as unknown as DataTableType;
 DataTable.use = use;
+DataTable.version = '4.0.0';
 
 export default DataTable;

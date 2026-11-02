@@ -2,9 +2,10 @@ import type { App, Plugin } from 'vue';
 import Column from './Column';
 import DataTableComponent from './DataTable';
 
-export type DataTableWithInstall = typeof DataTableComponent & Plugin & {
-	Column: typeof Column;
-};
+export type DataTableWithInstall = typeof DataTableComponent &
+	Plugin & {
+		Column: typeof Column;
+	};
 const DataTable = DataTableComponent as DataTableWithInstall;
 
 // Attach Column statically for UMD/script-tag (DataTable.Column)
@@ -22,4 +23,3 @@ DataTable.install = (app: App) => {
 
 export default DataTable;
 export { Column, DataTable };
-

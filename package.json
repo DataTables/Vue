@@ -1,6 +1,6 @@
 {
 	"name": "datatables.net-vue3",
-	"version": "4.0.0-beta.1",
+	"version": "4.0.0",
 	"license": "MIT",
 	"description": "Vue component for DataTables - The Javascript table library",
 	"main": "dist/index.js",

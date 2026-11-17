@@ -418,6 +418,6 @@ function use(lib?: any): any {
 
 const DataTable = DataTableComponent as unknown as DataTableType;
 DataTable.use = use;
-DataTable.version = '4.0.0';
+DataTable.version = '4.0.1';
 
 export default DataTable;

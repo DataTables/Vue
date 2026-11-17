@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig([
@@ -16,14 +15,8 @@ export default defineConfig([
 			js: '.mjs',
 			dts: '.d.mts'
 		}),
-		plugins: [
-			{
-				name: 'copy-dmts',
-				writeBundle() {
-					fs.copyFileSync('dist/index.d.ts', 'dist/index.d.mts');
-				}
-			}
-		]
+		publint: true,
+	    attw: { profile: 'node16' },
 	},
 
 	// CJS types only
